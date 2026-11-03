@@ -1,21 +1,3 @@
-import { createServerClient } from "@supabase/ssr";
-import { NextResponse, type NextRequest } from "next/server";
-
-const PUBLIC_PATHS = ["/login", "/signup"];
-
-function redirectTo(
-  request: NextRequest,
-  response: NextResponse,
-  pathname: string
-) {
-  const url = request.nextUrl.clone();
-  url.pathname = pathname;
-  url.search = "";
-  const redirect = NextResponse.redirect(url);
-  // preserva cookies de sessao renovados
-  response.cookies.getAll().forEach((cookie) => redirect.cookies.set(cookie));
-  return redirect;
-}
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
