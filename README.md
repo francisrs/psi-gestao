@@ -115,3 +115,4 @@ Ao definir o status de uma sessao como **Cancelada**, o formulario pede quem can
 - Exportacao de relatorios (CSV)
 - Recuperacao de senha e edicao de perfil
 - Testes automatizados e tipos gerados com `supabase gen types`
+# psigestao
