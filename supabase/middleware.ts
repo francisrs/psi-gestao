@@ -16,46 +16,45 @@ function redirectTo(
   response.cookies.getAll().forEach((cookie) => redirect.cookies.set(cookie));
   return redirect;
 }
+import { createServerClient } from '@supabase/ssr'
+import { NextResponse, type NextRequest } from 'next/server'
 
-/** Renova a sessao e protege as rotas privadas. */
 export async function updateSession(request: NextRequest) {
-  let response = NextResponse.next({ request });
+  let response = NextResponse.next({
+    request: {
+      headers: request.headers,
+    },
+  })
 
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  if (!url || !anonKey) return response;
-
-  const supabase = createServerClient(url, anonKey, {
-    cookies: {
-  getAll() {
-    return request.cookies.getAll();
-  },
-  // Adicione a tipagem (Array de objetos com name, value e options) logo abaixo:
-  setAll(cookiesToSet: { name: string; value: string; options: any }[]) {
-    cookiesToSet.forEach(({ name, value }) =>
-      request.cookies.set(name, value)
-    );
-    response = NextResponse.next({
-      request: {
-        headers: request.headers,
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return request.cookies.getAll()
+        },
+        setAll(cookiesToSet: { name: string; value: string; options: any }[]) {
+          cookiesToSet.forEach(({ name, value }) =>
+            request.cookies.set(name, value)
+          )
+          response = NextResponse.next({
+            request: {
+              headers: request.headers,
+            },
+          })
+          cookiesToSet.forEach(({ name, value, options }) =>
+            response.cookies.set(name, value, options)
+          )
+        },
       },
-    });
-    cookiesToSet.forEach(({ name, value, options }) =>
-      response.cookies.set(name, value, options)
-    );
-  },
-},
-
+    }
+  )
 
   const {
     data: { user },
-  } = await supabase.auth.getUser();
+  } = await supabase.auth.getUser()
 
-  const pathname = request.nextUrl.pathname;
-  const isPublic = PUBLIC_PATHS.includes(pathname);
-
-  if (!user && !isPublic) return redirectTo(request, response, "/login");
-  if (user && isPublic) return redirectTo(request, response, "/dashboard");
-
-  return response;
+  return response
 }
+
