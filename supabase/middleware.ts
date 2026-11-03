@@ -27,20 +27,25 @@ export async function updateSession(request: NextRequest) {
 
   const supabase = createServerClient(url, anonKey, {
     cookies: {
-      getAll() {
-        return request.cookies.getAll();
+  getAll() {
+    return request.cookies.getAll();
+  },
+  // Adicione a tipagem (Array de objetos com name, value e options) logo abaixo:
+  setAll(cookiesToSet: { name: string; value: string; options: any }[]) {
+    cookiesToSet.forEach(({ name, value }) =>
+      request.cookies.set(name, value)
+    );
+    response = NextResponse.next({
+      request: {
+        headers: request.headers,
       },
-      setAll(cookiesToSet) {
-        cookiesToSet.forEach(({ name, value }) =>
-          request.cookies.set(name, value)
-        );
-        response = NextResponse.next({ request });
-        cookiesToSet.forEach(({ name, value, options }) =>
-          response.cookies.set(name, value, options)
-        );
-      },
-    },
-  });
+    });
+    cookiesToSet.forEach(({ name, value, options }) =>
+      response.cookies.set(name, value, options)
+    );
+  },
+},
+
 
   const {
     data: { user },
