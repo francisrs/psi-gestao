@@ -8,6 +8,7 @@ export default async function PatientsPage({
   searchParams: Promise<{ q?: string }>;
 }) {
   const { supabase, user } = await requireUser();
+  const sp = await searchParams;
   const query = sp.q ?? "";
   const patients = await listPatients(supabase, query);
 
