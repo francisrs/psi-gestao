@@ -8,7 +8,7 @@ export default async function PatientsPage({
   searchParams: Promise<{ q?: string }>;
 }) {
   const { supabase, user } = await requireUser();
-  const query = (await searchParams).q ?? "";
+  const query = sp.q ?? "";
   const patients = await listPatients(supabase, query);
 
   return <PatientsView userId={user.id} patients={patients} initialQuery={query} />;

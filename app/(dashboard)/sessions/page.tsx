@@ -12,11 +12,12 @@ export default async function SessionsPage({
 }) {
   const { supabase, user } = await requireUser();
 
+  const sp = await searchParams;
   // valida os filtros vindos da URL
   const patientId =
-    (await searchParams).patient && isUuid((await searchParams).patient) ? (await searchParams).patient : "";
-  const status = SESSION_STATUSES.includes((await searchParams).status as SessionStatus)
-    ? ((await searchParams).status as SessionStatus)
+    sp.patient && isUuid(sp.patient) ? sp.patient : "";
+  const status = SESSION_STATUSES.includes(sp.status as SessionStatus)
+    ? (sp.status as SessionStatus)
     : "";
 
   const [sessions, patients] = await Promise.all([
