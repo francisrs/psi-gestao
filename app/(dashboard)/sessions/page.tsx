@@ -8,15 +8,15 @@ import type { SessionStatus } from "@/types/domain";
 export default async function SessionsPage({
   searchParams,
 }: {
-  searchParams: { patient?: string; status?: string };
+  searchParams: Promise<{ patient?: string; status?: string }>;
 }) {
   const { supabase, user } = await requireUser();
 
   // valida os filtros vindos da URL
   const patientId =
-    searchParams.patient && isUuid(searchParams.patient) ? searchParams.patient : "";
-  const status = SESSION_STATUSES.includes(searchParams.status as SessionStatus)
-    ? (searchParams.status as SessionStatus)
+    (await searchParams).patient && isUuid((await searchParams).patient) ? (await searchParams).patient : "";
+  const status = SESSION_STATUSES.includes((await searchParams).status as SessionStatus)
+    ? ((await searchParams).status as SessionStatus)
     : "";
 
   const [sessions, patients] = await Promise.all([

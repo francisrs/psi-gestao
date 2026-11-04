@@ -5,10 +5,10 @@ import { PatientsView } from "@/components/patients/PatientsView";
 export default async function PatientsPage({
   searchParams,
 }: {
-  searchParams: { q?: string };
+  searchParams: Promise<{ q?: string }>;
 }) {
   const { supabase, user } = await requireUser();
-  const query = searchParams.q ?? "";
+  const query = (await searchParams).q ?? "";
   const patients = await listPatients(supabase, query);
 
   return <PatientsView userId={user.id} patients={patients} initialQuery={query} />;
