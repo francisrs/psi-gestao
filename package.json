@@ -2,12 +2,12 @@
   "name": "psi-gestao",
   "version": "0.1.0",
   "private": true,
-  "scripts": {
+    "scripts": {
   "dev": "next dev",
   "build": "next build && npx opennextjs-cloudflare build --dangerouslyUseUnsupportedNextVersion",
   "start": "next start",
   "lint": "next lint",
-  "typecheck": "tsc --noEmit", 
+  "typecheck": "tsc --noEmit"
 }
 
 
