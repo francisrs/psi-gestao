@@ -3,7 +3,7 @@ import { createClient } from "@/supabase/server";
 
 /** Para Server Components: retorna o cliente e o usuario, ou redireciona ao login. */
 export async function requireUser() {
-  const supabase = createClient();
+  const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
