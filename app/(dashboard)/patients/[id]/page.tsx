@@ -23,12 +23,13 @@ import {
 export default async function PatientDetailPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
-  if (!isUuid(params.id)) notFound();
+  const { id } = await params;
+  if (!isUuid(id)) notFound();
 
   const { supabase } = await requireUser();
-  const detail = await getPatientDetail(supabase, params.id, todayISO());
+  const detail = await getPatientDetail(supabase, id, todayISO());
   if (!detail) notFound();
 
   const { patient, sessions, totalPaid, totalPending, noShowCount, nextSession } = detail;
